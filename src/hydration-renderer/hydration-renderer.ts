@@ -1,3 +1,7 @@
+/**
+ * Initial work done by Jeff B. Cross (https://github.com/jeffbcross/dom-hydration-experiment)
+ */
+
 import { Injectable, Renderer, RenderComponentType } from '@angular/core';
 import { RenderDebugInfo } from '@angular/core/src/render/api';
 import { DomRootRenderer, DomRenderer, DomRootRenderer_ } from '@angular/platform-browser/src/dom/dom_renderer';
