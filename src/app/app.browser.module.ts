@@ -18,21 +18,21 @@ import { HydrationRendererModule } from '../hydration-renderer/hydration-rendere
  * Top-level NgModule "container"
  */
 @NgModule({
-  /** Root App Component */
-  bootstrap: [ AppComponent ],
-  imports: [
-    /**
-     * NOTE: Needs to be your first import (!)
-     * BrowserModule, HttpModule, and JsonpModule are included
-     */
-    UniversalModule,
-    AppModule,
-    HydrationRendererModule
-    /**
-     * using routes
-     */
-    // RouterModule.forRoot(appRoutes)
-  ]
+	/** Root App Component */
+	bootstrap: [ AppComponent ],
+	imports: [
+		/**
+		 * NOTE: Needs to be your first import (!)
+		 * BrowserModule, HttpModule, and JsonpModule are included
+		 */
+		UniversalModule,
+		AppModule,
+		HydrationRendererModule
+		/**
+		 * using routes
+		 */
+		// RouterModule.forRoot(appRoutes)
+	]
 })
 export class BrowserAppModule {
 

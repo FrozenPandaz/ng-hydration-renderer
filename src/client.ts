@@ -12,7 +12,7 @@ import { BrowserAppModule } from './app/app.browser.module';
  * enable prod mode for production environments
  */
 if (environment.production) {
-  enableProdMode();
+	enableProdMode();
 }
 
 platformBrowserDynamic().bootstrapModule(BrowserAppModule);

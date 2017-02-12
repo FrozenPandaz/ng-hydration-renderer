@@ -22,7 +22,7 @@ const port = process.env.PORT || 4200;
  * enable prod mode for production environments
  */
 if (environment.production) {
-  enableProdMode();
+	enableProdMode();
 }
 
 /**
@@ -53,15 +53,15 @@ app.use('/', express.static(path.join(ROOT, 'client'), {index: false}));
  * @param res
  */
 function ngApp(req: any, res: any) {
-  res.render('index', {
-    req,
-    res,
-    ngModule: NodeAppModule,
-    preboot: false,
-    baseUrl: '/',
-    requestUrl: req.originalUrl,
-    originUrl: req.hostname
-  });
+	res.render('index', {
+		req,
+		res,
+		ngModule: NodeAppModule,
+		preboot: false,
+		baseUrl: '/',
+		requestUrl: req.originalUrl,
+		originUrl: req.hostname
+	});
 }
 
 /**
@@ -69,8 +69,8 @@ function ngApp(req: any, res: any) {
  */
 app.get('/', ngApp);
 routes.forEach(route => {
-  app.get(`/${route}`, ngApp);
-  app.get(`/${route}/*`, ngApp);
+	app.get(`/${route}`, ngApp);
+	app.get(`/${route}/*`, ngApp);
 });
 
 /**
@@ -78,12 +78,12 @@ routes.forEach(route => {
  */
 
 app.get('*', function (req: any, res: any) {
-  res.setHeader('Content-Type', 'application/json');
-  const pojo = {status: 404, message: 'No Content'};
-  const json = JSON.stringify(pojo, null, 2);
-  res.status(404).send(json);
+	res.setHeader('Content-Type', 'application/json');
+	const pojo = {status: 404, message: 'No Content'};
+	const json = JSON.stringify(pojo, null, 2);
+	res.status(404).send(json);
 });
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+	console.log(`Listening on port ${port}`);
 });

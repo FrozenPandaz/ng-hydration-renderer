@@ -17,20 +17,20 @@ import { AppComponent } from './index';
  * Top-level NgModule "container"
  */
 @NgModule({
-  /** Root App Component */
-  bootstrap: [ AppComponent ],
-  imports: [
-    /**
-     * NOTE: Needs to be your first import (!)
-     * NodeModule, NodeHttpModule, NodeJsonpModule are included
-     */
-    UniversalModule,
-    AppModule
-    /**
-     * using routes
-     */
-    // RouterModule.forRoot(appRoutes)
-  ]
+	/** Root App Component */
+	bootstrap: [ AppComponent ],
+	imports: [
+		/**
+		 * NOTE: Needs to be your first import (!)
+		 * NodeModule, NodeHttpModule, NodeJsonpModule are included
+		 */
+		UniversalModule,
+		AppModule
+		/**
+		 * using routes
+		 */
+		// RouterModule.forRoot(appRoutes)
+	]
 })
 export class NodeAppModule {
 
