@@ -19,10 +19,9 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 	renderComponent(componentProto: RenderComponentType): Renderer {
 		let renderer = this.registeredComponents.get(componentProto.id);
 		if (!renderer) {
-		renderer = new HydrationRenderer(
-			this, componentProto, this.animationDriver, `${this.appId}-${componentProto.id}`);
-		renderer.preservationAttribute = 'ngPreserveNode';
-		this.registeredComponents.set(componentProto.id, renderer);
+			renderer = new HydrationRenderer(this, componentProto, this.animationDriver, `${this.appId}-${componentProto.id}`);
+			renderer.preservationAttribute = 'ngPreserveNode';
+			this.registeredComponents.set(componentProto.id, renderer);
 		}
 		return renderer;
 	}
