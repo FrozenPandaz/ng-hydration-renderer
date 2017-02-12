@@ -30,6 +30,9 @@ import { AppComponent } from './index';
 		 * using routes
 		 */
 		// RouterModule.forRoot(appRoutes)
+	],
+	providers: [
+		{ provide: 'isNode', useValue: true }
 	]
 })
 export class NodeAppModule {

@@ -32,6 +32,9 @@ import { HydrationRendererModule } from '../hydration-renderer/hydration-rendere
 		 * using routes
 		 */
 		// RouterModule.forRoot(appRoutes)
+	],
+	providers: [
+		{ provide: 'isNode', useValue: false }
 	]
 })
 export class BrowserAppModule {

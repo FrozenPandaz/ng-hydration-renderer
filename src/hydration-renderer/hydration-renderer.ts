@@ -23,7 +23,7 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 
 		if (!renderer) {
 			renderer = new HydrationRenderer(this, componentProto, this.animationDriver, `${this.appId}-${componentProto.id}`);
-			renderer.preservationAttribute = 'ngPreserveNode';
+			renderer.preservationAttribute = 'ng-preserve-node';
 			this.registeredComponents.set(componentProto.id, renderer);
 		}
 
@@ -44,46 +44,19 @@ export class HydrationRenderer extends DomRenderer {
 		} else {
 			el = selectorOrNode;
 		}
-		for (let i = 0; i < el.children.length; i++) {
-
-		}
 		return removeUnPreservedChildren(el, this.preservationAttribute, true);
 	}
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
-		console.log('createElement', debugInfo, (new Error()).stack);
-		let el: Element;
-		let hydrated = false;
+		console.log('createElement', debugInfo);
+
 		if (existingElement(parent, name, this.preservationAttribute)) {
-			el = getExistingElement(parent, name);
-			hydrated = true;
-		} else if (isNamespaced(name)) {
-			const nsAndName = splitNamespace(name);
-			el = document.createElementNS((NAMESPACE_URIS)[nsAndName[0]], nsAndName[1]);
-		} else {
-			el = document.createElement(name);
+			console.log('Using existing', parent, name);
+			return getExistingElement(parent, name);
 		}
-		// if (this._contentAttr) {
-		//   el.setAttribute(this._contentAttr, '');
-		// }
-		if (parent && !hydrated) {
-			parent.appendChild(el);
-		}
-		return el;
+
+		return super.createElement(parent, name, debugInfo);
 	}
-
-  // createText(parentElement: Element|DocumentFragment, value: string, debugInfo: RenderDebugInfo):
-  //     any {
-  //       // TODO: get relative order of nodes
-  //       if (parentElement.childNodes) {
-
-  //       }
-  //   const node = document.createTextNode(value);
-  //   if (parentElement) {
-  //     parentElement.appendChild(node);
-  //   }
-  //   return node;
-  // }
 
 	setElementAttribute(renderElement: Element, attributeName: string, attributeValue: string): void {
 		let attrNs: string;
@@ -122,6 +95,7 @@ export function splitNamespace(name: string): string[] {
 
 function getExistingElement(parent: Element | DocumentFragment, name: string) {
 	// TODO: doesn't account for multiple instances of the same element
+	console.log('name', name);
 	return parent.querySelector(name);
 }
 
@@ -129,11 +103,10 @@ function existingElement(parent: Element | DocumentFragment, name: string, attr:
 	if (!parent) {
 		return false;
 	}
-	const el = parent.querySelector(name);
-	if (!el) {
-		return false;
-	}
-	return !!el.attributes.getNamedItem(attr);
+	const selector = `${name}[${attr}]`,
+		el = parent.querySelector(selector);
+
+	return !!el;
 }
 
 function removeUnPreservedChildren(root: Element, attr: string, isRoot?: boolean) {
@@ -158,7 +131,7 @@ function removeUnPreservedChildren(root: Element, attr: string, isRoot?: boolean
 	} else {
 		console.log('we have a loser', root);
 		while (root.firstChild) {
-		root.removeChild(root.firstChild);
+			root.removeChild(root.firstChild);
 		}
 	}
 
