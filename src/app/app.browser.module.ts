@@ -8,11 +8,11 @@
 
 import { NgModule } from '@angular/core';
 import { UniversalModule } from 'angular2-universal';
-import { FormsModule } from '@angular/forms';
 import { AppModule } from './app.module';
 import { AppComponent } from './index';
 // import { RouterModule } from '@angular/router';
 // import { appRoutes } from './app/app.routing';
+import { HydrationRendererModule } from '../hydration-renderer/hydration-renderer.module';
 
 /**
  * Top-level NgModule "container"
@@ -26,7 +26,8 @@ import { AppComponent } from './index';
      * BrowserModule, HttpModule, and JsonpModule are included
      */
     UniversalModule,
-    AppModule
+    AppModule,
+    HydrationRendererModule
     /**
      * using routes
      */
