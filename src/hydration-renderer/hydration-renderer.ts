@@ -16,7 +16,6 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 
 		if (!renderer) {
 			renderer = new HydrationRenderer(this, componentProto, this.animationDriver, `${this.appId}-${componentProto.id}`);
-			renderer.preservationAttribute = 'ng-preserve-node';
 			this.registeredComponents.set(componentProto.id, renderer);
 		}
 
@@ -24,9 +23,9 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 	}
 }
 
-export class HydrationRenderer extends DomRenderer {
-	public preservationAttribute: string;
+const PRESERVATION_ATTRIBUTE = 'ng-preserve-node';
 
+export class HydrationRenderer extends DomRenderer {
 	selectRootElement(selectorOrNode: string|Element, debugInfo: RenderDebugInfo): Element {
 		let el: Element;
 		if (typeof selectorOrNode === 'string') {
@@ -37,13 +36,13 @@ export class HydrationRenderer extends DomRenderer {
 		} else {
 			el = selectorOrNode;
 		}
-		return removeUnPreservedChildren(el, this.preservationAttribute, true);
+		return removeUnPreservedChildren(el, PRESERVATION_ATTRIBUTE, true);
 	}
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
 		console.log('createElement', debugInfo);
 
-		if (existingElement(parent, name, this.preservationAttribute)) {
+		if (existingElement(parent, name, PRESERVATION_ATTRIBUTE)) {
 			console.log('Using existing', parent, name);
 			return getExistingElement(parent, name);
 		}
@@ -52,7 +51,7 @@ export class HydrationRenderer extends DomRenderer {
 	}
 }
 
-function getExistingElement(parent: Element | DocumentFragment, name: string) {
+function getExistingElement(parent: Element | DocumentFragment, name: string): Element {
 	// TODO: doesn't account for multiple instances of the same element
 	console.log('name', name);
 	return parent.querySelector(name);

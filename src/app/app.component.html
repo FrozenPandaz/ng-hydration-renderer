@@ -1,6 +1,12 @@
 <h1 #titleElement ng-preserve-node>
 	{{title}}
 </h1>
+<h1 ng-preserve-node>
+	Should also be preserved
+</h1>
+<h1>
+	Should not be preserved
+</h1>
 <p *ngIf="!isNode">
 	Only Rendered on Client
 </p>
