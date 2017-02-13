@@ -61,7 +61,7 @@ function getPreservedElement(parent: Element | DocumentFragment, name: string): 
 		return null;
 	}
 	// TODO: doesn't account for multiple instances of the same element
-	return parent.querySelector(`${name}`);
+	return parent.querySelector(`${name}[${PRESERVATION_ATTRIBUTE}]`);
 }
 
 /**
@@ -69,7 +69,7 @@ function getPreservedElement(parent: Element | DocumentFragment, name: string): 
  */
 function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
-	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE) || element.querySelector(`[${PRESERVATION_ATTRIBUTE}]`)) {
+	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
 		console.log(element, 'has preserved state');
 		if (element.children) {
 			Array.prototype.forEach.call(element.children, el => removeUnPreservedChildren(el, false));
