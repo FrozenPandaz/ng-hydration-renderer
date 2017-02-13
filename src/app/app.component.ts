@@ -8,14 +8,16 @@ import { ElementRef, Component, Inject, OnInit, ViewChild } from '@angular/core'
 export class AppComponent implements OnInit {
 	title = 'app works on';
 
-	@ViewChild('title')
-	titleElement: ElementRef;
+	toggle = true;
 
 	constructor(@Inject('isNode') public isNode: boolean) {}
 
+	toggleElement() {
+		this.toggle = !this.toggle;
+	}
+
 	ngOnInit() {
 		this.title += this.isNode ? ' node!' : ' browser!';
-		console.log(!!this.titleElement);
 	}
 
 }

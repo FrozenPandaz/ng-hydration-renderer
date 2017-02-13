@@ -5,10 +5,12 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
+import { ChildComponent } from './child/child.component';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		ChildComponent
 	],
 	imports: [
 		CommonModule,

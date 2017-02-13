@@ -7,6 +7,9 @@
 <h1>
 	Should not be preserved
 </h1>
+<button (click)="toggleElement()">Toggle</button>
+<h1 *ngIf="toggle" ng-preserve-node>Toggled Element</h1>
 <p *ngIf="!isNode">
 	Only Rendered on Client
 </p>
+<app-child></app-child>

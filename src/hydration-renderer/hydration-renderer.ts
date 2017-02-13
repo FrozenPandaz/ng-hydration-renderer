@@ -36,62 +36,55 @@ export class HydrationRenderer extends DomRenderer {
 		} else {
 			el = selectorOrNode;
 		}
-		return removeUnPreservedChildren(el, PRESERVATION_ATTRIBUTE, true);
+		// Core is removing elements here that should change?
+		return removeUnPreservedChildren(el, true);
 	}
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
-		console.log('createElement', debugInfo);
+		// console.log('createElement', parent, name);
 
-		if (existingElement(parent, name, PRESERVATION_ATTRIBUTE)) {
-			console.log('Using existing', parent, name);
-			return getExistingElement(parent, name);
+		const el = getPreservedElement(parent, name);
+
+		if (el) {
+			return el;
 		}
 
 		return super.createElement(parent, name, debugInfo);
 	}
 }
 
-function getExistingElement(parent: Element | DocumentFragment, name: string): Element {
-	// TODO: doesn't account for multiple instances of the same element
-	console.log('name', name);
-	return parent.querySelector(name);
-}
-
-function existingElement(parent: Element | DocumentFragment, name: string, attr: string): boolean {
+/**
+ * Get's a preserved Element matching
+ */
+function getPreservedElement(parent: Element | DocumentFragment, name: string): Element {
 	if (!parent) {
-		return false;
+		return null;
 	}
-	const selector = `${name}[${attr}]`,
-		el = parent.querySelector(selector);
-
-	return !!el;
+	// TODO: doesn't account for multiple instances of the same element
+	return parent.querySelector(`${name}`);
 }
 
-function removeUnPreservedChildren(root: Element, attr: string, isRoot?: boolean) {
-	if (isRoot) {
-		console.log('running on root');
-	}
-	// We don't want to destroy the root element
-	if (isRoot || root.attributes.getNamedItem(attr)) {
-		console.log('we have a match!', root);
-		if (root.children) {
-			Array.prototype.forEach.call(root.children, el => removeUnPreservedChildren(el, attr, false));
+/**
+ * Cleans Unpreserved Children from node
+ */
+function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
+	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
+	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE) || element.querySelector(`[${PRESERVATION_ATTRIBUTE}]`)) {
+		console.log(element, 'has preserved state');
+		if (element.children) {
+			Array.prototype.forEach.call(element.children, el => removeUnPreservedChildren(el, false));
 		}
-		if (root.childNodes) {
-			Array.prototype.filter.call(root.childNodes, (node) => {
-				return node instanceof Text;
-			})
-			.forEach(n => {
-				// Just remove each text node
-				root.removeChild(n);
+		if (element.childNodes) {
+			Array.prototype.forEach.call(element.childNodes, (node) => {
+				element.removeChild(node);
 			});
 		}
 	} else {
-		console.log('we have a loser', root);
-		while (root.firstChild) {
-			root.removeChild(root.firstChild);
+		console.log(element, 'getting a clean slate');
+		while (element.firstChild) {
+			element.removeChild(element.firstChild);
 		}
 	}
 
-	return root;
+	return element;
 }
