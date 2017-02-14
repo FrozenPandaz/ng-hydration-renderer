@@ -41,3 +41,4 @@ testem.log
 Thumbs.db
 
 src/hydration-renderer/dist
+src/hydration-renderer/node_modules
