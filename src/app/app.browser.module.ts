@@ -12,7 +12,7 @@ import { AppModule } from './app.module';
 import { AppComponent } from './index';
 // import { RouterModule } from '@angular/router';
 // import { appRoutes } from './app/app.routing';
-import { HydrationRendererModule } from '../hydration-renderer/hydration-renderer.module';
+import { HydrationRendererModule } from 'ng-hydration-renderer';
 
 /**
  * Top-level NgModule "container"
