@@ -54,7 +54,7 @@ export class HydrationRenderer extends DomRenderer {
 }
 
 /**
- * Get's a preserved Element matching
+ * Gets a preserved Element matching
  */
 function getPreservedElement(parent: Element | DocumentFragment, name: string): Element {
 	if (!parent) {
