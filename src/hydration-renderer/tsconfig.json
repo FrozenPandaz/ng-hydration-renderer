@@ -13,8 +13,6 @@
 		"target": "es5"
 	},
 	"files": [
-		"hydration-renderer.module.ts",
-		"hydration-renderer.ts",
 		"index.ts"
 	],
 	"exclude": [
