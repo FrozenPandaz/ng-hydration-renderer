@@ -6,7 +6,10 @@
   "scripts": {
     "start": "ung serve",
     "lint": "tslint \"src/**/*.ts\"",
+	"pretest": "npm run lint",
     "test": "ung test",
+    "build": "ung build",
+    "build:aot": "ung build --aot",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor"
   },
