@@ -2,14 +2,30 @@
  * Initial work done by Jeff B. Cross (https://github.com/jeffbcross/dom-hydration-experiment)
  */
 
-import { Injectable, Renderer, RenderComponentType } from '@angular/core';
+import { Inject, Injectable, Renderer, RenderComponentType, APP_ID } from '@angular/core';
+
+// Private core modules
 import { RenderDebugInfo } from '@angular/core/src/render/api';
-import { DomRootRenderer, DomRenderer, DomRootRenderer_ } from '@angular/platform-browser/src/dom/dom_renderer';
+
+// Private platform-browser modules
+import { DOCUMENT } from '@angular/platform-browser/src/dom/dom_tokens';
+import { EventManager } from '@angular/platform-browser/src/dom/events/event_manager';
+import { DomSharedStylesHost } from '@angular/platform-browser/src/dom/shared_styles_host';
+import { DomRenderer, DomRootRenderer_ } from '@angular/platform-browser/src/dom/dom_renderer';
+import { AnimationDriver } from '@angular/platform-browser/src/dom/animation_driver';
 
 @Injectable()
 export class HydrationRootRenderer extends DomRootRenderer_ {
 
-	registeredComponents: Map<string, HydrationRenderer>;
+	constructor(
+		@Inject(DOCUMENT) _document: any,
+		_eventManager: EventManager,
+		sharedStylesHost: DomSharedStylesHost,
+		animationDriver: AnimationDriver,
+		@Inject(APP_ID) appId: string
+	) {
+		super(_document, _eventManager, sharedStylesHost, animationDriver, appId);
+	}
 
 	renderComponent(componentProto: RenderComponentType): Renderer {
 		let renderer = this.registeredComponents.get(componentProto.id);
