@@ -6,8 +6,9 @@
   "scripts": {
     "start": "ung serve",
     "lint": "tslint \"src/**/*.ts\"",
-	"pretest": "npm run lint",
+    "pretest": "npm run lint",
     "test": "ung test",
+	"test:once": "ung test --single-run",
     "build": "ung build",
     "build:aot": "ung build --aot",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
@@ -37,16 +38,16 @@
   },
   "devDependencies": {
     "@angular/compiler-cli": "2.2.3",
-    "@types/jasmine": "2.5.38",
-    "@types/node": "^6.0.42",
     "@types/body-parser": "0.0.29",
     "@types/compression": "0.0.29",
     "@types/cookie-parser": "^1.3.29",
     "@types/express": "^4.0.29",
     "@types/express-serve-static-core": "^4.0.29",
+    "@types/jasmine": "2.5.42",
+    "@types/karma": "^0.13.33",
     "@types/mime": "0.0.28",
+    "@types/node": "^6.0.42",
     "@types/serve-static": "^1.7.27",
-    "universal-cli": "1.0.0-alpha.universal.3",
     "codelyzer": "~2.0.0-beta.1",
     "jasmine-core": "2.5.2",
     "jasmine-spec-reporter": "2.5.0",
@@ -58,6 +59,7 @@
     "protractor": "~4.0.13",
     "ts-node": "1.2.1",
     "tslint": "^4.0.2",
-    "typescript": "~2.0.3"
+    "typescript": "~2.0.3",
+    "universal-cli": "1.0.0-alpha.universal.3"
   }
 }
