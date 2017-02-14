@@ -13,7 +13,7 @@
 	"dist"
   ],
   "scripts": {
-	  "prepublish": "rm -rf dist && ngc"
+	  "prepublish": "rm -rf dist && ngc -p tsconfig.json"
   },
   "peerDependencies": {
     "@angular/core": "^2.4.7",
