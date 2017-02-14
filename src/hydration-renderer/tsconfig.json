@@ -15,13 +15,15 @@
 	},
 	"files": [
 		"hydration-renderer.module.ts",
-		"hydration-renderer.ts"
+		"hydration-renderer.ts",
+		"index.ts"
 	],
 	"exclude": [
 		"node_modules",
 		"**/*.spec.ts"
 	],
 	"angularCompilerOptions": {
+		"genDir": "dist",
 		"annotateForClosureCompiler": true,
 		"strictMetadataEmit": true
 	}
