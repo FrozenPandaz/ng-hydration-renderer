@@ -4,6 +4,7 @@
   "version": "0.0.0-alpha.0",
   "license": "MIT",
   "main": "dist/hydration-renderer.module.js",
+  "module": "dist/hydration-renderer.module.js",
   "types": "dist/index.d.ts",
   "repository": {
 	"type": "git",

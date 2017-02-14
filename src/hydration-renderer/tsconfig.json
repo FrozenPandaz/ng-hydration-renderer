@@ -10,8 +10,7 @@
 		"moduleResolution": "node",
 		"outDir": "dist",
 		"sourceMap": true,
-		"target": "es5",
-		"types": [ "node" ]
+		"target": "es5"
 	},
 	"files": [
 		"hydration-renderer.module.ts",
