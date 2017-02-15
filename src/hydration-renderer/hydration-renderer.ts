@@ -42,23 +42,100 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 const PRESERVATION_ATTRIBUTE = 'ng-preserve-node';
 
 export class HydrationRenderer extends DomRenderer {
+	private root: Element;
+
+	private preservedKeys: string[] = [];
+
 	selectRootElement(selectorOrNode: string|Element, debugInfo: RenderDebugInfo): Element {
-		let el: Element;
 		if (typeof selectorOrNode === 'string') {
-			el = (<any>this)._rootRenderer.document.querySelector(selectorOrNode);
-			if (!el) {
+			this.root = <Element> (<any>this)._rootRenderer.document.querySelector(selectorOrNode);
+			if (!this.root) {
 				throw new Error(`The selector "${selectorOrNode}" did not match any elements`);
 			}
 		} else {
-			el = selectorOrNode;
+			this.root = selectorOrNode;
 		}
+
+		this.indexAllNodes();
+
 		// Core is removing elements here that should change?
-		return removeUnPreservedChildren(el, true);
+		return removeUnPreservedChildren(this.root, true);
 	}
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
 		// console.log('createElement', parent, name);
-		return getPreservedElement(parent, name) || super.createElement(parent, name, debugInfo);
+
+		console.log(this.getNextKey(parent, name));
+		let el = getPreservedElement(parent, name) || super.createElement(parent, name, debugInfo);
+
+		if (el) {
+			el.removeAttribute(PRESERVATION_ATTRIBUTE);
+		}
+
+		return el;
+	}
+
+	private indexAllNodes() {
+		const preservedNodes = this.root.querySelectorAll(`[${PRESERVATION_ATTRIBUTE}]`);
+
+		Array.from(preservedNodes).forEach((preservedNode) => {
+			this.preservedKeys.push(this.getElementKey(preservedNode));
+		});
+
+		console.log(this.preservedKeys);
+	}
+
+	/**
+	 * Original Idea from Preboot
+	 */
+	private getElementKey(element: Element) {
+		let node = element.previousElementSibling,
+			key = element.nodeName;
+
+		while (node) {
+			key = node.nodeName + '-' + key;
+			node = node.previousElementSibling;
+		}
+
+		node = element.parentElement;
+
+		while (node !== this.root) {
+			key = node.nodeName + '_' + key;
+			node = node.parentElement;
+		}
+
+		return key;
+	}
+
+	private getNextKey(parent: Element | DocumentFragment, name: string) {
+		let key = name.toUpperCase();
+		if (!parent) {
+			console.log('no parent');
+			return key;
+		}
+
+		const children = Array.from(parent.children),
+			len = children.length;
+
+		children
+			.filter(child => {
+				return !child.hasAttribute(PRESERVATION_ATTRIBUTE);
+			})
+			.reverse()
+			.forEach(child => {
+				key = child.nodeName + '-' + key;
+			});
+
+		if (parent === this.root || !this.root) {
+			return key;
+		}
+		let node = parent.parentElement;
+		while (node !== this.root) {
+			key = node.nodeName + '_' + key;
+			node = node.parentElement;
+		}
+
+		return key;
 	}
 }
 
@@ -78,7 +155,7 @@ function getPreservedElement(parent: Element | DocumentFragment, name: string): 
  */
 function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
-	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
+	if (isRoot || element.hasAttribute(PRESERVATION_ATTRIBUTE)) {
 		console.log(element, 'has preserved state');
 		if (element.children) {
 			Array.prototype.forEach.call(element.children, el => removeUnPreservedChildren(el, false));
@@ -94,6 +171,45 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 			element.removeChild(element.firstChild);
 		}
 	}
-
 	return element;
+}
+
+/**
+ * Originally Taken from preboot
+ */
+function getNodeKey(node: Element, root: Element): string {
+	let ancestors: Element[] = [];
+	let temp = node;
+
+	// walk up the tree from the target node up to the root
+	while (temp && temp !== root) {
+		ancestors.push(temp);
+		temp = temp.parentElement;
+	}
+
+	// note: if temp doesn't exist here it means root node wasn't found
+	// This should never happen
+	if (temp) {
+		ancestors.push(temp);
+	}
+
+	// now go backwards starting from the root, appending the appName to unique identify the node later..
+	let name = node.nodeName || 'unknown';
+	let key = name;
+	let len = ancestors.length;
+
+	for (let i = (len - 1); i >= 0; i--) {
+		temp = ancestors[i];
+
+		if (temp.childNodes && i > 0) {
+			for (let j = 0; j < temp.childNodes.length; j++) {
+				if (temp.childNodes[j] === ancestors[i - 1]) {
+					key += '_s' + (j + 1);
+					break;
+				}
+			}
+		}
+	}
+
+	return key;
 }

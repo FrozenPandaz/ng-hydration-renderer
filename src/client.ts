@@ -15,4 +15,6 @@ if (environment.production) {
 	enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(BrowserAppModule);
+window['init'] = () => {
+	platformBrowserDynamic().bootstrapModule(BrowserAppModule);
+}
