@@ -61,17 +61,22 @@ export class HydrationRenderer extends DomRenderer {
 		let el = getPreservedElement(parent, name);
 
 		if (el) {
-			console.log('found existing');
 			el.removeAttribute(PRESERVATION_ATTRIBUTE);
-			debugger;
 		} else {
-			console.log('creating new');
-			debugger;
 			el = super.createElement(parent, name, debugInfo);
 		}
 
 		return el;
 	}
+
+	setElementAttribute(renderElement: Element, attributeName: string, attributeValue: string): void {
+		if (attributeName === PRESERVATION_ATTRIBUTE) {
+			return;
+		}
+
+		super.setElementAttribute(renderElement, attributeName, attributeValue);
+	}
+
 }
 
 /**
