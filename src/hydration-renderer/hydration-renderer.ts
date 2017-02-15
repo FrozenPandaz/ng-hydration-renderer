@@ -97,6 +97,13 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 				.forEach((node) => {
 					const preserved = node.hasAttribute(PRESERVATION_ATTRIBUTE);
 					if (preserved) {
+						Array.from(node.childNodes)
+							.filter(ele => {
+								return ele.nodeName === '#text';
+							})
+							.forEach(ele => {
+								node.removeChild(ele);
+							});
 						removeUnPreservedChildren(node, false);
 					} else {
 						element.removeChild(node);
