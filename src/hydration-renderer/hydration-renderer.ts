@@ -76,7 +76,7 @@ export class HydrationRenderer extends DomRenderer {
 	}
 
 	private indexAllNodes() {
-		const preservedNodes = this.root.querySelectorAll(`[${PRESERVATION_ATTRIBUTE}]`);
+		const preservedNodes = this.root.querySelectorAll(`*`);
 
 		Array.from(preservedNodes).forEach((preservedNode) => {
 			this.preservedKeys.push(this.getElementKey(preservedNode));
@@ -101,6 +101,12 @@ export class HydrationRenderer extends DomRenderer {
 
 		while (node !== this.root) {
 			key = node.nodeName + '_' + key;
+
+			while (node.previousElementSibling) {
+				node = node.previousElementSibling;
+				key = node.nodeName + '-' + key;
+			}
+
 			node = node.parentElement;
 		}
 
