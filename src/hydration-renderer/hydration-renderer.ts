@@ -90,23 +90,17 @@ export class HydrationRenderer extends DomRenderer {
 	 * Original Idea from Preboot
 	 */
 	private getElementKey(element: Element) {
-		let node = element.previousElementSibling,
+		let node = element,
 			key = element.nodeName;
 
-		while (node) {
-			key = node.nodeName + '-' + key;
-			node = node.previousElementSibling;
-		}
+		prependSiblings(node, key);
 
 		node = element.parentElement;
 
 		while (node !== this.root) {
 			key = node.nodeName + '_' + key;
 
-			while (node.previousElementSibling) {
-				node = node.previousElementSibling;
-				key = node.nodeName + '-' + key;
-			}
+			prependSiblings(node, key);
 
 			node = node.parentElement;
 		}
@@ -153,6 +147,13 @@ export class HydrationRenderer extends DomRenderer {
 		super.setElementAttribute(renderElement, attributeName, attributeValue);
 	}
 
+}
+
+function prependSiblings(node: Element, key: string) {
+	while (node.previousElementSibling) {
+		key = node.nodeName + '-' + key;
+		node = node.previousElementSibling;
+	}
 }
 
 /**
