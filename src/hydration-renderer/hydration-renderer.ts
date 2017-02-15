@@ -86,7 +86,7 @@ function getPreservedElement(parent: Element | DocumentFragment, name: string): 
 	if (!parent) {
 		return null;
 	}
-	// TODO: doesn't account for multiple instances of the same element
+
 	return parent.querySelector(`${name}[${PRESERVATION_ATTRIBUTE}]`);
 }
 
