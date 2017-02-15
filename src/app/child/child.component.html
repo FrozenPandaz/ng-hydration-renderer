@@ -1,4 +1,6 @@
-<app-child *ngIf="enough"></app-child>
+<div *ngIf="depth < max_depth">
+	<app-child *ngFor="let i of nodes" [depth]="depth+1"></app-child>
+</div>
 <h1 ng-preserve-node>
 	Children's Preserved Title
 </h1>

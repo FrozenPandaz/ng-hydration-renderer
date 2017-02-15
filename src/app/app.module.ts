@@ -17,6 +17,10 @@ import { ChildComponent } from './child/child.component';
 		FormsModule,
 		HttpModule
 	],
+	providers: [
+		{ provide: 'depth', useValue: 7 },
+		{ provide: 'siblings', useValue: 7 }
+	],
 	exports: [AppComponent]
 })
 export class AppModule { }

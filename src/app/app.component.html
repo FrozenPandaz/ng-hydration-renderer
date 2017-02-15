@@ -1,16 +1,16 @@
 <h2>This is first</h2>
-<h1 #titleElement ng-preserve-node>
+<h1 #titleElement ng-preserve-node node-position=2>
 	{{title}}
 </h1>
-<h1 ng-preserve-node>
+<h1 ng-preserve-node node-position=3>
 	Should also be preserved
 </h1>
 <h1>
 	Should not be preserved
 </h1>
-<button (click)="toggleElement()">Toggle</button>
+<!--<button (click)="toggleElement()">Toggle</button>
 <h1 *ngIf="toggle" ng-preserve-node>Toggled Element</h1>
 <p *ngIf="!isNode">
 	Only Rendered on Client
-</p>
-<app-child></app-child>
+</p>-->
+<app-child [depth]=1 ></app-child>

@@ -73,23 +73,45 @@ function getPreservedElement(parent: Element | DocumentFragment, name: string): 
 	return parent.querySelector(`${name}[${PRESERVATION_ATTRIBUTE}]`);
 }
 
+function preserve(element: Element) {
+	element.setAttribute(PRESERVATION_ATTRIBUTE, '');
+}
+
 /**
  * Cleans Unpreserved Children from node
  */
 function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
+	// This is an experiment, where we try to preserve everything?
+
+	if (isRoot) {
+		console.time('preserve everything');
+		const preservedElements = element.querySelectorAll(`*`);
+
+		for ( let i = 0; i < preservedElements.length; i++ ) {
+			const preservedElement = preservedElements.item(i);
+
+			preserve(preservedElement);
+
+		}
+		console.timeEnd('preserve everything');
+	}
+
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
 	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
-		console.log(element, 'has preserved state');
+		// console.log(element, 'has preserved state');
 		if (element.children) {
 			Array.prototype.forEach.call(element.children, el => removeUnPreservedChildren(el, false));
 		}
 		if (element.childNodes) {
-			Array.prototype.forEach.call(element.childNodes, (node) => {
+			Array.prototype.forEach.call(element.childNodes, (node: Node) => {
+				if (node.attributes && node.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
+					return;
+				}
 				element.removeChild(node);
 			});
 		}
 	} else {
-		console.log(element, 'getting a clean slate');
+		// console.log(element, 'getting a clean slate');
 		while (element.firstChild) {
 			element.removeChild(element.firstChild);
 		}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit, Inject } from '@angular/core';
 
 @Component({
 	selector: 'app-child',
@@ -7,12 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChildComponent implements OnInit {
 
-	enough = false;
+	@Input()
+	depth: number;
 
-	constructor() { }
+	nodes: any[];
+
+	constructor(@Inject('depth') public max_depth: number, @Inject('siblings') public siblings: number) { }
 
 	ngOnInit() {
-		this.enough = Math.random() * 5 > 1;
+		this.nodes = new Array(this.siblings);
 	}
 
 }
