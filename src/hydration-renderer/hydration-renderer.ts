@@ -76,6 +76,7 @@ export class HydrationRenderer extends DomRenderer {
 	}
 
 	private indexAllNodes() {
+		// We can do this on server side
 		const preservedNodes = this.root.querySelectorAll(`*`);
 
 		Array.from(preservedNodes).forEach((preservedNode) => {
