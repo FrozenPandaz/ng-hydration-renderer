@@ -63,7 +63,6 @@ export class HydrationRenderer extends DomRenderer {
 	}
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
-		console.log('createElement', parent, name);
 		let el = getPreservedElement(parent, name);
 
 		if (el) {
