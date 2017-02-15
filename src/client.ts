@@ -16,7 +16,6 @@ if (environment.production) {
 }
 
 window['init'] = () => {
-	console.log('bootstrap client');
 	platformBrowserDynamic().bootstrapModule(BrowserAppModule);
 };
 
