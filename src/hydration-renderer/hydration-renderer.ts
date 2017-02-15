@@ -63,13 +63,13 @@ export class HydrationRenderer extends DomRenderer {
 	}
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
-		// console.log('createElement', parent, name);
-
-		console.log(this.getNextKey(parent, name));
-		let el = getPreservedElement(parent, name) || super.createElement(parent, name, debugInfo);
+		console.log('createElement', parent, name);
+		let el = getPreservedElement(parent, name);
 
 		if (el) {
 			el.removeAttribute(PRESERVATION_ATTRIBUTE);
+		} else {
+			el = super.createElement(parent, name, debugInfo);
 		}
 
 		return el;
@@ -143,6 +143,15 @@ export class HydrationRenderer extends DomRenderer {
 
 		return key;
 	}
+
+	setElementAttribute(renderElement: Element, attributeName: string, attributeValue: string): void {
+		if (attributeName === PRESERVATION_ATTRIBUTE) {
+			return;
+		}
+
+		super.setElementAttribute(renderElement, attributeName, attributeValue);
+	}
+
 }
 
 /**
@@ -152,7 +161,7 @@ function getPreservedElement(parent: Element | DocumentFragment, name: string): 
 	if (!parent) {
 		return null;
 	}
-	// TODO: doesn't account for multiple instances of the same element
+
 	return parent.querySelector(`${name}[${PRESERVATION_ATTRIBUTE}]`);
 }
 
@@ -164,12 +173,22 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	if (isRoot || element.hasAttribute(PRESERVATION_ATTRIBUTE)) {
 		console.log(element, 'has preserved state');
 		if (element.children) {
-			Array.prototype.forEach.call(element.children, el => removeUnPreservedChildren(el, false));
-		}
-		if (element.childNodes) {
-			Array.prototype.forEach.call(element.childNodes, (node) => {
-				element.removeChild(node);
-			});
+			Array.from(element.children)
+				.forEach((node) => {
+					const preserved = node.hasAttribute(PRESERVATION_ATTRIBUTE);
+					if (preserved) {
+						Array.from(node.childNodes)
+							.filter(ele => {
+								return ele.nodeName === '#text';
+							})
+							.forEach(ele => {
+								node.removeChild(ele);
+							});
+						removeUnPreservedChildren(node, false);
+					} else {
+						element.removeChild(node);
+					}
+				});
 		}
 	} else {
 		console.log(element, 'getting a clean slate');
