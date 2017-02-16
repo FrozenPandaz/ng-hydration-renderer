@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.0.0-alpha.5
+
+* Preserved actual parent
+
 ### 0.0.0-alpha.4
 
 * Less log spam

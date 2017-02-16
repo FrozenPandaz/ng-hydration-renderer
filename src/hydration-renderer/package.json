@@ -1,7 +1,7 @@
 {
   "name": "ng-hydration-renderer",
   "description": "A renderer for Angular which will hydrate an existing render",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-alpha.5",
   "license": "MIT",
   "main": "dist/hydration-renderer.module.js",
   "module": "dist/hydration-renderer.module.js",
