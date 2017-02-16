@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 import { ChildComponent } from './child/child.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
 	declarations: [
@@ -15,7 +16,8 @@ import { ChildComponent } from './child/child.component';
 	imports: [
 		CommonModule,
 		FormsModule,
-		HttpModule
+		HttpModule,
+		AppRoutingModule
 	],
 	exports: [AppComponent]
 })

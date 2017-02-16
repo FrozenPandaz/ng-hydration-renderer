@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.0.0-alpha.4
+
+* Less log spam
+* No more debugger
+
 ### 0.0.0-alpha.3
 
 * Everything works? Though maybe not efficiently

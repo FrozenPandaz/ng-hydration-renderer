@@ -102,23 +102,38 @@ function getPreservedElement(parent: Element | DocumentFragment, name: string): 
 function preserveElements(root: Element) {
 	let preservedElements = root.querySelectorAll(`[${PRESERVATION_ATTRIBUTE}]`);
 
-	Array.from(preservedElements).forEach((preservedElement) => {
+	Array.from(preservedElements)
+		.forEach((preservedElement) => {
 
-		preservePreviousSiblings(preservedElement);
-		let node = preservedElement;
-		while (node.parentElement) {
-			preservePreviousSiblings(node.parentElement);
-			node = node.parentElement;
-		}
-	});
+			preservePreviousSiblings(preservedElement);
+			preserveParentsAndParentsPreviousSiblings(preservedElement);
+		});
+
+	preserveElement(root);
+	preservePreviousSiblings(root);
+	preserveParentsAndParentsPreviousSiblings(root);
+}
+
+function preserveParentsAndParentsPreviousSiblings(element: Element) {
+	let node = element;
+	while (node.parentElement) {
+		preserveElement(node.parentElement);
+		preservePreviousSiblings(node.parentElement);
+		node = node.parentElement;
+	}
 }
 
 function preservePreviousSiblings(element: Element) {
 	let node = element;
 	while (node.previousElementSibling) {
-		node.previousElementSibling.setAttribute(PRESERVATION_ATTRIBUTE, '');
+		preserveElement(node.previousElementSibling);
 		node = node.previousElementSibling;
 	}
+}
+
+function preserveElement(element: Element): void {
+	console.log('preserving', element);
+	element.setAttribute(PRESERVATION_ATTRIBUTE, '');
 }
 
 /**
