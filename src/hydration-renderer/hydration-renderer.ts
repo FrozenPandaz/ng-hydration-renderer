@@ -40,6 +40,7 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 }
 
 const PRESERVATION_ATTRIBUTE = 'ng-preserve-node';
+const PRESERVED_ATTRIBUTE = 'ng-preserved';
 
 export class HydrationRenderer extends DomRenderer {
 	selectRootElement(selectorOrNode: string|Element, debugInfo: RenderDebugInfo): Element {
@@ -52,6 +53,9 @@ export class HydrationRenderer extends DomRenderer {
 		} else {
 			el = selectorOrNode;
 		}
+
+		preserveElements(el);
+
 		// Core is removing elements here that should change?
 		return removeUnPreservedChildren(el, true);
 	}
@@ -61,16 +65,25 @@ export class HydrationRenderer extends DomRenderer {
 		let el = getPreservedElement(parent, name);
 
 		if (el) {
+			console.log('updating preserved', name);
 			el.removeAttribute(PRESERVATION_ATTRIBUTE);
+			el.setAttribute(PRESERVED_ATTRIBUTE, '');
 		} else {
+			console.log('creating new', name);
 			el = super.createElement(parent, name, debugInfo);
 		}
+
+		debugger;
 
 		return el;
 	}
 
 	setElementAttribute(renderElement: Element, attributeName: string, attributeValue: string): void {
 		if (attributeName === PRESERVATION_ATTRIBUTE) {
+			return;
+		}
+
+		if (renderElement.hasAttribute(PRESERVED_ATTRIBUTE)) {
 			return;
 		}
 
@@ -88,6 +101,28 @@ function getPreservedElement(parent: Element | DocumentFragment, name: string): 
 	}
 
 	return parent.querySelector(`${name}[${PRESERVATION_ATTRIBUTE}]`);
+}
+
+function preserveElements(root: Element) {
+	let preservedElements = root.querySelectorAll(`[${PRESERVATION_ATTRIBUTE}]`);
+
+	Array.from(preservedElements).forEach((preservedElement) => {
+
+		preservePreviousSiblings(preservedElement);
+		let node = preservedElement;
+		while (node.parentElement) {
+			preservePreviousSiblings(node.parentElement);
+			node = node.parentElement;
+		}
+	});
+}
+
+function preservePreviousSiblings(element: Element) {
+	let node = element;
+	while (node.previousElementSibling) {
+		node.previousElementSibling.setAttribute(PRESERVATION_ATTRIBUTE, '');
+		node = node.previousElementSibling;
+	}
 }
 
 /**
