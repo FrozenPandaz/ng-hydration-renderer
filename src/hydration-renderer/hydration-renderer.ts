@@ -61,7 +61,6 @@ export class HydrationRenderer extends DomRenderer {
 	}
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
-		console.log('createElement', parent, name);
 		let el = getPreservedElement(parent, name);
 
 		if (el) {
@@ -69,11 +68,8 @@ export class HydrationRenderer extends DomRenderer {
 			el.removeAttribute(PRESERVATION_ATTRIBUTE);
 			el.setAttribute(PRESERVED_ATTRIBUTE, '');
 		} else {
-			console.log('creating new', name);
 			el = super.createElement(parent, name, debugInfo);
 		}
-
-		debugger;
 
 		return el;
 	}
@@ -131,7 +127,6 @@ function preservePreviousSiblings(element: Element) {
 function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
 	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
-		console.log(element, 'has preserved state');
 		if (element.children) {
 			Array.from(element.children)
 				.forEach((node) => {
@@ -151,7 +146,6 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 				});
 		}
 	} else {
-		console.log(element, 'getting a clean slate');
 		while (element.firstChild) {
 			element.removeChild(element.firstChild);
 		}
