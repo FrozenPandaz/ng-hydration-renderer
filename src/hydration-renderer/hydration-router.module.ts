@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { HydrationRouterOutletDirective } from './hydration-router-outlet';
+import { HydrationRouterOutlet } from './hydration-router-outlet';
 
 @NgModule({
 	declarations: [
-		HydrationRouterOutletDirective
+		HydrationRouterOutlet
 	],
 	exports: [
-		HydrationRouterOutletDirective
+		HydrationRouterOutlet
 	]
 })
 export class HydrationRouterModule {
