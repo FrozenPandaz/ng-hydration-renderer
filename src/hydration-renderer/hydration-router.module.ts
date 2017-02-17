@@ -10,5 +10,4 @@ import { HydrationRouterOutlet } from './hydration-router-outlet';
 	]
 })
 export class HydrationRouterModule {
-
 }

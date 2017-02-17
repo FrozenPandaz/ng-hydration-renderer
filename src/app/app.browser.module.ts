@@ -12,7 +12,7 @@ import { AppModule } from './app.module';
 import { AppComponent } from './index';
 // import { RouterModule } from '@angular/router';
 // import { appRoutes } from './app/app.routing';
-import { HydrationRendererModule, HydrationRouterModule } from 'ng-hydration-renderer';
+import { HydrationRendererModule } from 'ng-hydration-renderer';
 
 /**
  * Top-level NgModule "container"
@@ -26,9 +26,8 @@ import { HydrationRendererModule, HydrationRouterModule } from 'ng-hydration-ren
 		 * BrowserModule, HttpModule, and JsonpModule are included
 		 */
 		UniversalModule,
-		AppModule,
 		HydrationRendererModule,
-		HydrationRouterModule
+		AppModule
 		/**
 		 * using routes
 		 */

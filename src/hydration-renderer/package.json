@@ -17,11 +17,13 @@
     "prepublish": "rm -rf dist && ngc -p tsconfig.json"
   },
   "peerDependencies": {
+    "@angular/common": "^2.4.7",
     "@angular/core": "^2.4.7",
     "@angular/platform-browser": "^2.4.7",
     "@angular/router": "^3.4.7"
   },
   "devDependencies": {
+    "@angular/common": "^2.4.7",
     "@angular/compiler": "^2.4.7",
     "@angular/compiler-cli": "^2.4.7",
     "@angular/core": "^2.4.7",
@@ -29,7 +31,7 @@
     "@angular/platform-server": "^2.4.7",
     "@angular/router": "^3.4.7",
     "rxjs": "^5.1.1",
-    "typescript": "^2.2.0",
+    "typescript": "~2.0.10",
     "zone.js": "^0.7.7"
   }
 }
