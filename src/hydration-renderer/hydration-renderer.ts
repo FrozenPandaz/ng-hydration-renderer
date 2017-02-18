@@ -11,7 +11,7 @@ import { RenderDebugInfo } from '@angular/core/src/render/api';
 import { DOCUMENT } from '@angular/platform-browser/src/dom/dom_tokens';
 import { EventManager } from '@angular/platform-browser/src/dom/events/event_manager';
 import { DomSharedStylesHost } from '@angular/platform-browser/src/dom/shared_styles_host';
-import { DomRenderer, DomRootRenderer_ } from '@angular/platform-browser/src/dom/dom_renderer';
+import { DIRECT_DOM_RENDERER, DomRenderer, DomRootRenderer_ } from '@angular/platform-browser/src/dom/dom_renderer';
 import { AnimationDriver } from '@angular/platform-browser/src/dom/animation_driver';
 
 @Injectable()
@@ -39,10 +39,31 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 	}
 }
 
+const HYDRATION_DIRECT_RENDERER = DIRECT_DOM_RENDERER;
+
+HYDRATION_DIRECT_RENDERER.appendChild = (node: Node, parent: Element) => {
+	console.log('direct appendChild');
+	parent.appendChild(node);
+};
+HYDRATION_DIRECT_RENDERER.insertBefore = (node: Node, refNode: Node) => {
+	console.log('direct insertBefore', node, refNode);
+	if (getPreservedElement(refNode.parentElement, node.nodeName.toLowerCase())) {
+		return;
+	}
+	refNode.parentNode.insertBefore(node, refNode);
+};
+
 const PRESERVATION_ATTRIBUTE = 'ng-preserve-node';
 const PRESERVED_ATTRIBUTE = 'ng-preserved';
 
 export class HydrationRenderer extends DomRenderer {
+
+	constructor(
+		_rootRenderer: HydrationRootRenderer, componentProto: RenderComponentType,
+		_animationDriver: AnimationDriver, styleShimId: string) {
+			super(_rootRenderer, componentProto, _animationDriver, styleShimId);
+			this.directRenderer = HYDRATION_DIRECT_RENDERER;
+	}
 	selectRootElement(selectorOrNode: string|Element, debugInfo: RenderDebugInfo): Element {
 		let el: Element;
 		if (typeof selectorOrNode === 'string') {
@@ -62,6 +83,7 @@ export class HydrationRenderer extends DomRenderer {
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
 		let el = getPreservedElement(parent, name);
+		console.log('createElement', parent, name);
 
 		if (el) {
 			console.log('updating preserved', name);
