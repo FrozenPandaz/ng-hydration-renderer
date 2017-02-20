@@ -11,6 +11,10 @@ export class ChildComponent implements OnInit {
 
 	constructor() { }
 
+	sayHello() {
+		console.log('Hello');
+	}
+
 	ngOnInit() {
 		this.enough = Math.random() * 5 > 1;
 	}
