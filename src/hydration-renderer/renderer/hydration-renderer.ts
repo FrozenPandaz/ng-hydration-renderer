@@ -49,16 +49,16 @@ HYDRATION_DIRECT_RENDERER.insertBefore = (node: Node, refNode: Node) => {
 	console.log('direct insertBefore', node, refNode);
 	const preservedElement = getPreservedElement(refNode.parentElement, node.nodeName.toLowerCase());
 	if (preservedElement) {
-		Array.from(node.childNodes)
-			.forEach(childNode => {
-				node.removeChild(childNode);
-			});
-		Array.from(preservedElement.childNodes)
-			.forEach(childNode => {
-				node.appendChild(childNode);
-			});
-		refNode.parentNode.insertBefore(node, refNode);
-		refNode.parentNode.removeChild(preservedElement);
+		// Array.from(node.childNodes)
+		// 	.forEach(childNode => {
+		// 		node.removeChild(childNode);
+		// 	});
+		// Array.from(preservedElement.childNodes)
+		// 	.forEach(childNode => {
+		// 		node.appendChild(childNode);
+		// 	});
+		// refNode.parentNode.insertBefore(node, refNode);
+		// refNode.parentNode.removeChild(preservedElement);
 		return;
 	}
 	refNode.parentNode.insertBefore(node, refNode);
