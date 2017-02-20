@@ -47,7 +47,18 @@ HYDRATION_DIRECT_RENDERER.appendChild = (node: Node, parent: Element) => {
 };
 HYDRATION_DIRECT_RENDERER.insertBefore = (node: Node, refNode: Node) => {
 	console.log('direct insertBefore', node, refNode);
-	if (getPreservedElement(refNode.parentElement, node.nodeName.toLowerCase())) {
+	const preservedElement = getPreservedElement(refNode.parentElement, node.nodeName.toLowerCase());
+	if (preservedElement) {
+		Array.from(node.childNodes)
+			.forEach(childNode => {
+				node.removeChild(childNode);
+			});
+		Array.from(preservedElement.childNodes)
+			.forEach(childNode => {
+				node.appendChild(childNode);
+			});
+		refNode.parentNode.insertBefore(node, refNode);
+		refNode.parentNode.removeChild(preservedElement);
 		return;
 	}
 	refNode.parentNode.insertBefore(node, refNode);
@@ -165,17 +176,12 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
 	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
 		if (element.children) {
+			removeTextNodes(element);
 			Array.from(element.children)
 				.forEach((node) => {
 					const preserved = node.hasAttribute(PRESERVATION_ATTRIBUTE);
 					if (preserved) {
-						Array.from(node.childNodes)
-							.filter(ele => {
-								return ele.nodeName === '#text';
-							})
-							.forEach(ele => {
-								node.removeChild(ele);
-							});
+						removeTextNodes(node);
 						removeUnPreservedChildren(node, false);
 					} else {
 						element.removeChild(node);
@@ -189,4 +195,14 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	}
 
 	return element;
+}
+
+function removeTextNodes(element: Element) {
+	Array.from(element.childNodes)
+		.filter(ele => {
+			return ele.nodeName === '#text';
+		})
+		.forEach(ele => {
+			element.removeChild(ele);
+		});
 }

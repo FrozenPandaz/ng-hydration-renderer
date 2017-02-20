@@ -2,7 +2,7 @@ import { HydrationRenderer, HydrationRootRenderer } from './hydration-renderer';
 import { RootRenderer, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
-import { HydrationRendererModule } from './hydration-renderer.module';
+import { HydrationRendererModule } from '../hydration-renderer.module';
 
 @Component({
 	selector: 'app-mock-component',
