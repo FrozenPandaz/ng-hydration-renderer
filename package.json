@@ -29,7 +29,6 @@
     "compression": "1.6.2",
     "core-js": "^2.4.1",
     "express": "^4.14.0",
-    "ng-hydration-renderer": "file:src/hydration-renderer",
     "rxjs": "5.0.0-beta.12",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.6.23"
