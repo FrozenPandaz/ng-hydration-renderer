@@ -5,8 +5,11 @@ node_js:
   - '6.9'
   - '7.0'
 
-before_script:
-  - npm run test:once
+before_install:
+  - cd src/hydration-renderer
+  - npm install
+  - npm run prepublish
+  - cd ../..
 
 script:
   - npm run build
