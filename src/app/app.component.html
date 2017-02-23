@@ -10,6 +10,13 @@
 	Should not be preserved
 </h1>
 <app-child></app-child>
-Router Outlet
+<div>
+	First
+	<p ng-preserve-node>Second</p>
+	Third
+</div>
+<span>Router Outlet
 {{isNode}}
+{{count | async}}</span>
 <router-outlet></router-outlet>
+<h4>Not Preserved</h4>

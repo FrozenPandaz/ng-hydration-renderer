@@ -1,5 +1,7 @@
 import { ElementRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 
+import { Observable } from 'rxjs';
+
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -10,6 +12,8 @@ export class AppComponent implements OnInit {
 
 	toggle = true;
 
+	count: Observable<number>;
+
 	constructor(@Inject('isNode') public isNode: boolean) {}
 
 	toggleElement() {
@@ -18,6 +22,8 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		this.title += this.isNode ? ' node!' : ' browser!';
+
+		this.count = Observable.interval(200).take(10);
 	}
 
 }

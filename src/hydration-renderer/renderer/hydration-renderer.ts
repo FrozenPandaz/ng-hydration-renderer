@@ -78,6 +78,8 @@ export class HydrationRenderer extends DomRenderer {
 		} else {
 			el = selectorOrNode;
 		}
+		el.removeAttribute(PRESERVATION_ATTRIBUTE);
+		el.setAttribute(PRESERVED_ATTRIBUTE, '');
 
 		preserveElements(el);
 
@@ -111,23 +113,18 @@ export class HydrationRenderer extends DomRenderer {
 	}
 
 	createText(parent: Element | DocumentFragment, value: string, debugInfo: RenderDebugInfo): Node {
-		if (parent.attributes.getNamedItem(PRESERVED_ATTRIBUTE)) {
+		if (!parent.attributes.getNamedItem(PRESERVED_ATTRIBUTE)) {
 			return super.createText(parent, value, debugInfo);
-		} else {
-			const matchingText = Array.from(parent.childNodes)
-				.filter(child => {
-					return child && child.nodeName === '#text' && child.nodeValue === value;
-				});
-			if (matchingText[0]) {
-				return matchingText[0];
-			}
-			console.warn('The HydrationRenderer could not locate your text node in', parent);
-			console.warn(`
-You're client rendered text is different from your server rendered text.
-If this is the case, you can avoid this by wrapping your text and preserving it.
-			`);
-			return document.createTextNode(value);
 		}
+
+		const matchingText = Array.from(parent.childNodes)
+			.filter(child => {
+				return child && child.nodeName === '#text';
+			});
+		if (matchingText[0]) {
+			return matchingText[0];
+		}
+		return document.createTextNode(value);
 	}
 
 	setElementAttribute(renderElement: Element, attributeName: string, attributeValue: string): void {
@@ -197,12 +194,10 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
 	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
 		if (element.children) {
-			// removeTextNodes(element);
 			Array.from(element.children)
 				.forEach((node) => {
 					const preserved = node.hasAttribute(PRESERVATION_ATTRIBUTE);
 					if (preserved) {
-						removeTextNodes(node);
 						removeUnPreservedChildren(node, false);
 					} else {
 						element.removeChild(node);
@@ -216,14 +211,4 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	}
 
 	return element;
-}
-
-function removeTextNodes(element: Element) {
-	Array.from(element.childNodes)
-		.filter(ele => {
-			return ele.nodeName === '#text';
-		})
-		.forEach(ele => {
-			element.removeChild(ele);
-		});
 }
