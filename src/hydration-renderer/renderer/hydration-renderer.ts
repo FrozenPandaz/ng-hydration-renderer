@@ -113,7 +113,7 @@ export class HydrationRenderer extends DomRenderer {
 	}
 
 	createText(parent: Element | DocumentFragment, value: string, debugInfo: RenderDebugInfo): Node {
-		if (!parent.attributes.getNamedItem(PRESERVED_ATTRIBUTE)) {
+		if (!parent || !parent.attributes.getNamedItem(PRESERVED_ATTRIBUTE)) {
 			return super.createText(parent, value, debugInfo);
 		}
 
