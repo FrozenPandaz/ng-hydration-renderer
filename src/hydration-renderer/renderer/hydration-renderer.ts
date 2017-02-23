@@ -17,6 +17,9 @@ import { AnimationDriver } from '@angular/platform-browser/src/dom/animation_dri
 @Injectable()
 export class HydrationRootRenderer extends DomRootRenderer_ {
 
+	/**
+	 * Hackaround the Router Outlet
+	 **/
 	public nextParent: Element;
 
 	constructor(
@@ -44,11 +47,9 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 const HYDRATION_DIRECT_RENDERER = DIRECT_DOM_RENDERER;
 
 HYDRATION_DIRECT_RENDERER.appendChild = (node: Node, parent: Element) => {
-	console.log('direct appendChild');
 	parent.appendChild(node);
 };
 HYDRATION_DIRECT_RENDERER.insertBefore = (node: Node, refNode: Node) => {
-	console.log('direct insertBefore', node, refNode);
 	const preservedElement = getPreservedElement(refNode.parentElement, node.nodeName.toLowerCase());
 	if (preservedElement) {
 		return;
@@ -87,15 +88,15 @@ export class HydrationRenderer extends DomRenderer {
 	createElement(parent: Element | DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
 		const nextParent = (<any>this)._rootRenderer.nextParent,
 			hasNextParent = !!nextParent;
+
+		// Hackaround the Router Outlet
 		if (nextParent) {
 			parent = nextParent;
 		}
 
 		let el = getPreservedElement(parent, name);
-		// console.log('createElement', parent, name);
 
 		if (el) {
-			// console.log('updating preserved', name);
 			el.removeAttribute(PRESERVATION_ATTRIBUTE);
 			el.setAttribute(PRESERVED_ATTRIBUTE, '');
 		} else {
@@ -167,7 +168,6 @@ function preservePreviousSiblings(element: Element) {
 }
 
 function preserveElement(element: Element): void {
-	// console.log('preserving', element);
 	element.setAttribute(PRESERVATION_ATTRIBUTE, '');
 }
 
