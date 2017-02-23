@@ -121,13 +121,11 @@ export class HydrationRenderer extends DomRenderer {
 			if (matchingText[0]) {
 				return matchingText[0];
 			}
-			console.group();
 			console.warn('The HydrationRenderer could not locate your text node in', parent);
 			console.warn(`
 You're client rendered text is different from your server rendered text.
 If this is the case, you can avoid this by wrapping your text and preserving it.
 			`);
-			console.groupEnd();
 			return document.createTextNode(value);
 		}
 	}
