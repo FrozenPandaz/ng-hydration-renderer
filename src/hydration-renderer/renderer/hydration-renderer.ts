@@ -94,10 +94,10 @@ export class HydrationRenderer extends DomRenderer {
 
 	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
 		let el = getPreservedElement(parent, name);
-		console.log('createElement', parent, name);
+		// console.log('createElement', parent, name);
 
 		if (el) {
-			console.log('updating preserved', name);
+			// console.log('updating preserved', name);
 			el.removeAttribute(PRESERVATION_ATTRIBUTE);
 			el.setAttribute(PRESERVED_ATTRIBUTE, '');
 		} else {
@@ -165,7 +165,7 @@ function preservePreviousSiblings(element: Element) {
 }
 
 function preserveElement(element: Element): void {
-	console.log('preserving', element);
+	// console.log('preserving', element);
 	element.setAttribute(PRESERVATION_ATTRIBUTE, '');
 }
 

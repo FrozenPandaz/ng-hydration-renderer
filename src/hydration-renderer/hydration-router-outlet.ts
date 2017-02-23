@@ -3,15 +3,24 @@ import {
 	Directive,
 	ViewContainerRef,
 	ComponentFactoryResolver,
-	Attribute } from '@angular/core';
+	Attribute,
+	Injector,
+	ResolvedReflectiveProvider
+} from '@angular/core';
 
 import { ActivatedRoute, RouterOutlet, RouterOutletMap } from '@angular/router';
 
-export class HydrationRouterOutlet extends RouterOutlet {
 
-	attach(ref: ComponentRef<any>, activatedRoute: ActivatedRoute) {
-		console.log('attach');
-		super.attach(ref, activatedRoute);
+export class HydrationRouterOutlet extends RouterOutlet {
+	activate(
+		activatedRoute: ActivatedRoute,
+		resolver: ComponentFactoryResolver,
+		injector: Injector,
+		providers: ResolvedReflectiveProvider[],
+		outletMap: RouterOutletMap
+	): void {
+		console.log('activate');
+		super.activate(activatedRoute, resolver, injector, providers, outletMap);
 	}
 }
 
