@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.0.0-alpha.6
+
+* Router Outlet Support
+
 ### 0.0.0-alpha.5
 
 * Preserved actual parent
