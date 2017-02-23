@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.0.0-alpha.7
+
+* Fix ordering of text nodes
+
 ### 0.0.0-alpha.6
 
 * Router Outlet Support
