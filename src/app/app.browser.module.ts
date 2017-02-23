@@ -26,8 +26,8 @@ import { HydrationRendererModule } from '../hydration-renderer';
 		 * BrowserModule, HttpModule, and JsonpModule are included
 		 */
 		UniversalModule,
-		AppModule,
-		HydrationRendererModule
+		HydrationRendererModule,
+		AppModule
 		/**
 		 * using routes
 		 */

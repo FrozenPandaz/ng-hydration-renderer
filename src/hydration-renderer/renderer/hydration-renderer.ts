@@ -11,11 +11,16 @@ import { RenderDebugInfo } from '@angular/core/src/render/api';
 import { DOCUMENT } from '@angular/platform-browser/src/dom/dom_tokens';
 import { EventManager } from '@angular/platform-browser/src/dom/events/event_manager';
 import { DomSharedStylesHost } from '@angular/platform-browser/src/dom/shared_styles_host';
-import { DomRenderer, DomRootRenderer_ } from '@angular/platform-browser/src/dom/dom_renderer';
+import { DIRECT_DOM_RENDERER, DomRenderer, DomRootRenderer_ } from '@angular/platform-browser/src/dom/dom_renderer';
 import { AnimationDriver } from '@angular/platform-browser/src/dom/animation_driver';
 
 @Injectable()
 export class HydrationRootRenderer extends DomRootRenderer_ {
+
+	/**
+	 * Hackaround the Router Outlet
+	 **/
+	public nextParent: Element;
 
 	constructor(
 		@Inject(DOCUMENT) _document: any,
@@ -39,10 +44,30 @@ export class HydrationRootRenderer extends DomRootRenderer_ {
 	}
 }
 
+const HYDRATION_DIRECT_RENDERER = DIRECT_DOM_RENDERER;
+
+HYDRATION_DIRECT_RENDERER.appendChild = (node: Node, parent: Element) => {
+	parent.appendChild(node);
+};
+HYDRATION_DIRECT_RENDERER.insertBefore = (node: Node, refNode: Node) => {
+	const preservedElement = getPreservedElement(refNode.parentElement, node.nodeName.toLowerCase());
+	if (preservedElement) {
+		return;
+	}
+	refNode.parentNode.insertBefore(node, refNode);
+};
+
 const PRESERVATION_ATTRIBUTE = 'ng-preserve-node';
 const PRESERVED_ATTRIBUTE = 'ng-preserved';
 
 export class HydrationRenderer extends DomRenderer {
+
+	constructor(
+		_rootRenderer: HydrationRootRenderer, componentProto: RenderComponentType,
+		_animationDriver: AnimationDriver, styleShimId: string) {
+			super(_rootRenderer, componentProto, _animationDriver, styleShimId);
+			this.directRenderer = HYDRATION_DIRECT_RENDERER;
+	}
 	selectRootElement(selectorOrNode: string|Element, debugInfo: RenderDebugInfo): Element {
 		let el: Element;
 		if (typeof selectorOrNode === 'string') {
@@ -60,15 +85,26 @@ export class HydrationRenderer extends DomRenderer {
 		return removeUnPreservedChildren(el, true);
 	}
 
-	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
+	createElement(parent: Element | DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
+		const nextParent = (<any>this)._rootRenderer.nextParent,
+			hasNextParent = !!nextParent;
+
+		// Hackaround the Router Outlet
+		if (nextParent) {
+			parent = nextParent;
+		}
+
 		let el = getPreservedElement(parent, name);
 
 		if (el) {
-			console.log('updating preserved', name);
 			el.removeAttribute(PRESERVATION_ATTRIBUTE);
 			el.setAttribute(PRESERVED_ATTRIBUTE, '');
 		} else {
 			el = super.createElement(parent, name, debugInfo);
+		}
+
+		if (hasNextParent) {
+			delete (<any>this)._rootRenderer.nextParent;
 		}
 
 		return el;
@@ -132,7 +168,6 @@ function preservePreviousSiblings(element: Element) {
 }
 
 function preserveElement(element: Element): void {
-	console.log('preserving', element);
 	element.setAttribute(PRESERVATION_ATTRIBUTE, '');
 }
 
@@ -143,17 +178,12 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
 	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
 		if (element.children) {
+			removeTextNodes(element);
 			Array.from(element.children)
 				.forEach((node) => {
 					const preserved = node.hasAttribute(PRESERVATION_ATTRIBUTE);
 					if (preserved) {
-						Array.from(node.childNodes)
-							.filter(ele => {
-								return ele.nodeName === '#text';
-							})
-							.forEach(ele => {
-								node.removeChild(ele);
-							});
+						removeTextNodes(node);
 						removeUnPreservedChildren(node, false);
 					} else {
 						element.removeChild(node);
@@ -167,4 +197,14 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	}
 
 	return element;
+}
+
+function removeTextNodes(element: Element) {
+	Array.from(element.childNodes)
+		.filter(ele => {
+			return ele.nodeName === '#text';
+		})
+		.forEach(ele => {
+			element.removeChild(ele);
+		});
 }
