@@ -110,6 +110,17 @@ export class HydrationRenderer extends DomRenderer {
 		return el;
 	}
 
+	createText(parent: Element | DocumentFragment, value: string, debugInfo: RenderDebugInfo): Node {
+		if (parent.attributes.getNamedItem(PRESERVED_ATTRIBUTE)) {
+			return super.createText(parent, value, debugInfo);
+		} else {
+			return Array.from(parent.children)
+				.filter(child => {
+					return child && child.nodeName === '#text' && child.nodeValue === value;
+				})[0];
+		}
+	}
+
 	setElementAttribute(renderElement: Element, attributeName: string, attributeValue: string): void {
 		if (attributeName === PRESERVATION_ATTRIBUTE) {
 			return;
@@ -140,7 +151,6 @@ function preserveElements(root: Element) {
 
 	Array.from(preservedElements)
 		.forEach((preservedElement) => {
-
 			preservePreviousSiblings(preservedElement);
 			preserveParentsAndParentsPreviousSiblings(preservedElement);
 		});
@@ -178,7 +188,7 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
 	if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
 		if (element.children) {
-			removeTextNodes(element);
+			// removeTextNodes(element);
 			Array.from(element.children)
 				.forEach((node) => {
 					const preserved = node.hasAttribute(PRESERVATION_ATTRIBUTE);
