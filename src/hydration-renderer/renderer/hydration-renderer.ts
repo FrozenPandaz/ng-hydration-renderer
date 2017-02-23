@@ -17,6 +17,8 @@ import { AnimationDriver } from '@angular/platform-browser/src/dom/animation_dri
 @Injectable()
 export class HydrationRootRenderer extends DomRootRenderer_ {
 
+	public nextParent: Element;
+
 	constructor(
 		@Inject(DOCUMENT) _document: any,
 		_eventManager: EventManager,
@@ -49,16 +51,6 @@ HYDRATION_DIRECT_RENDERER.insertBefore = (node: Node, refNode: Node) => {
 	console.log('direct insertBefore', node, refNode);
 	const preservedElement = getPreservedElement(refNode.parentElement, node.nodeName.toLowerCase());
 	if (preservedElement) {
-		// Array.from(node.childNodes)
-		// 	.forEach(childNode => {
-		// 		node.removeChild(childNode);
-		// 	});
-		// Array.from(preservedElement.childNodes)
-		// 	.forEach(childNode => {
-		// 		node.appendChild(childNode);
-		// 	});
-		// refNode.parentNode.insertBefore(node, refNode);
-		// refNode.parentNode.removeChild(preservedElement);
 		return;
 	}
 	refNode.parentNode.insertBefore(node, refNode);
@@ -92,7 +84,13 @@ export class HydrationRenderer extends DomRenderer {
 		return removeUnPreservedChildren(el, true);
 	}
 
-	createElement(parent: Element|DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
+	createElement(parent: Element | DocumentFragment, name: string, debugInfo: RenderDebugInfo): Element {
+		const nextParent = (<any>this)._rootRenderer.nextParent,
+			hasNextParent = !!nextParent;
+		if (nextParent) {
+			parent = nextParent;
+		}
+
 		let el = getPreservedElement(parent, name);
 		// console.log('createElement', parent, name);
 
@@ -102,6 +100,10 @@ export class HydrationRenderer extends DomRenderer {
 			el.setAttribute(PRESERVED_ATTRIBUTE, '');
 		} else {
 			el = super.createElement(parent, name, debugInfo);
+		}
+
+		if (hasNextParent) {
+			delete (<any>this)._rootRenderer.nextParent;
 		}
 
 		return el;

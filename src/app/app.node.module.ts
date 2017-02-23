@@ -26,8 +26,7 @@ import { HydrationRouterModule } from '../hydration-renderer/hydration-router.mo
 		 * NodeModule, NodeHttpModule, NodeJsonpModule are included
 		 */
 		UniversalModule,
-		AppModule,
-		HydrationRouterModule
+		AppModule
 		/**
 		 * using routes
 		 */
