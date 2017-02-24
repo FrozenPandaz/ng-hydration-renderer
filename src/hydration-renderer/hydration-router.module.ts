@@ -3,9 +3,6 @@ import { HydrationRouterOutlet } from './hydration-router-outlet';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-	imports: [
-		RouterModule
-	],
 	declarations: [
 		HydrationRouterOutlet
 	],

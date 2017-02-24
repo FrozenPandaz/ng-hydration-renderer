@@ -5,12 +5,6 @@ import { HydrationRouterModule } from './hydration-router.module';
 @NgModule({
 	providers: [
 		{ provide: RootRenderer, useClass: HydrationRootRenderer }
-	],
-	imports: [
-		HydrationRouterModule
-	],
-	exports: [
-		HydrationRouterModule
 	]
 })
 export class HydrationRendererModule {
