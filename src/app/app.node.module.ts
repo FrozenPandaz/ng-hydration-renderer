@@ -12,7 +12,6 @@ import { AppModule } from './app.module';
 import { AppComponent } from './index';
 // import { RouterModule } from '@angular/router';
 // import { appRoutes } from './app/app.routing';
-import { HydrationRouterModule } from '../hydration-renderer/hydration-router.module';
 
 /**
  * Top-level NgModule "container"

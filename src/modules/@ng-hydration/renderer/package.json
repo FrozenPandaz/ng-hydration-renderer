@@ -1,5 +1,5 @@
 {
-  "name": "ng-hydration-renderer",
+  "name": "@ng-hydration/renderer",
   "description": "A renderer for Angular which will hydrate an existing render",
   "version": "0.0.0-alpha.7",
   "license": "MIT",

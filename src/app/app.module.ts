@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 import { ChildComponent } from './child/child.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HydrationRouterModule } from '../hydration-renderer/hydration-router.module';
+import { HydrationRouterModule } from '../modules/@ng-hydration/router';
 
 @NgModule({
 	declarations: [
