@@ -1,6 +1,5 @@
 import { NgModule, RootRenderer } from '@angular/core';
-import { HydrationRootRenderer } from './renderer/hydration-renderer';
-import { HydrationRouterModule } from './hydration-router.module';
+import { HydrationRootRenderer } from './hydration-renderer';
 
 @NgModule({
 	providers: [

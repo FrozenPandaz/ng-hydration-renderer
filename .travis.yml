@@ -9,6 +9,9 @@ script:
   - npm run build
 
 after_script:
-  - cd src/hydration-renderer
+  - cd src/modules/@ng-hydration/renderer
+  - npm install
+  - npm run prepublish
+  - cd ../router
   - npm install
   - npm run prepublish
