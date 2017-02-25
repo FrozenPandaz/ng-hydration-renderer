@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { CachedHttp } from '../../modules/cached-http/cached-http';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'home-view',

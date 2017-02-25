@@ -2,7 +2,8 @@ const ngtools = require('@ngtools/webpack');
 const webpackMerge = require('webpack-merge');
 
 const serverConfig = {
-	entry: './src/main.server.ts',
+  entry: './src/main.server.ts',
+  devtool: 'source-map',
 	resolve: {
     extensions: ['.ts', '.js']
   },

@@ -15,7 +15,7 @@ import { CachedHttpModule } from '../modules/cached-http/cached-http.module';
     CachedHttpModule,
 		RouterModule.forRoot([
 			{ path: '', component: HomeView, pathMatch: 'full'},
-			// { path: 'lazy', loadChildren: './+lazy/lazy.module#LazyModule'} // Currently seems broken
+			{ path: 'lazy', loadChildren: './+lazy/lazy.module#LazyModule'}
 		])
 	],
   providers: [
