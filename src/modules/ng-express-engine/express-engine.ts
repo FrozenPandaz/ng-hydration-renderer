@@ -62,8 +62,8 @@ function injectCache(moduleRef: NgModuleRef<{}>) {
     const script: HTMLScriptElement = <HTMLScriptElement> dom.createElement('script');
     const cacheString = JSON.stringify(cache.toJson());
     dom.setText(script, `window['UNIVERSAL_CACHE'] = ${cacheString}`);
-    const body = dom.querySelector(document, 'body');
-    dom.appendChild(body, script);
+    const head = dom.querySelector(document, 'head');
+    dom.appendChild(head, script);
   } catch (e) {
     console.error(e);
   }

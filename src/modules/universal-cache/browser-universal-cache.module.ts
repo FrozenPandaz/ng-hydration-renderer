@@ -9,8 +9,7 @@ export function getUniversalCache() {
 
 @NgModule({
   providers: [
-    UniversalCache,
-    // { provide: UniversalCache, useFactory: getUniversalCache }
+    { provide: UniversalCache, useFactory: getUniversalCache }
   ]
 })
 export class BrowserUniversalCacheModule {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
+import { CachedHttp } from '../../modules/cached-http/cached-http';
 
 @Component({
 	selector: 'home-view',
@@ -9,10 +9,10 @@ import { Observable } from 'rxjs';
 export class HomeView implements OnInit {
   public subs: Observable<string>;
 
-  constructor(private http: Http) {}
+  constructor(private http: CachedHttp) {}
 
   ngOnInit() {
-    this.subs = this.http.get('http://localhost:8000/data').map(res => res.json()).map(data => {
+    this.subs = this.http.get('http://localhost:8000/data').map(data => {
       return `${data.greeting} ${data.name}`;
     });
   }
