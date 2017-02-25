@@ -8,7 +8,9 @@ export class CachedHttp {
   constructor(private http: Http, protected cache: UniversalCache) {}
 
   request(uri: string | Request, options?: RequestOptionsArgs): Observable<any> {
-    return this.getData(uri, options, this.http.request);
+    return this.getData(uri, options, (url: string, options: RequestOptionsArgs) => {
+      return this.http.request(url, options);
+    });
   }
   /**
    * Performs a request with `get` http method.
