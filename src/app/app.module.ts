@@ -12,10 +12,10 @@ import { CachedHttpModule } from '../modules/cached-http/cached-http.module';
     CommonModule,
     HttpModule,
     CachedHttpModule,
-		RouterModule.forRoot([
-			{ path: '', component: HomeView, pathMatch: 'full'},
-			{ path: 'lazy', loadChildren: './+lazy/lazy.module#LazyModule'}
-		])
+		// RouterModule.forRoot([
+		// 	{ path: '', component: HomeView, pathMatch: 'full'},
+		// 	{ path: 'lazy', loadChildren: './+lazy/lazy.module#LazyModule'}
+		// ])
 	],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/'}

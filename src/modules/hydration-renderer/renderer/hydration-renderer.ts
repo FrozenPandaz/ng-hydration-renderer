@@ -56,6 +56,7 @@ export class DefaultHydrationDomRenderer extends ɵDefaultDomRendererV2 {
       throw new Error(`The selector "${selectorOrNode}" did not match any elements`);
     }
 
+    preserveElements(el);
     removeUnPreservedChildren(el, true);
 
     return el;
@@ -66,14 +67,33 @@ export class DefaultHydrationDomRenderer extends ɵDefaultDomRendererV2 {
       return super.appendChild(parent, newChild);
     }
     const el = getPreservedElement(parent, newChild.tagName.toLowerCase());
+    console.log('appendChild', parent, newChild);
+    if (el) {
+      this.setAttribute(el, PRESERVED_ATTRIBUTE, '');
+      this.removeAttribute(el, PRESERVATION_ATTRIBUTE);
+      Array.from(newChild.childNodes)
+        .forEach((node: Node) => {
+          this.appendChild(el, node);
+        });
+      newChild = el;
+      return;
+    }
+    super.appendChild(parent, newChild);
+  }
+
+  insertBefore(parent: any, newChild: any, refChild: any): void {
+    console.log('insertBefore', parent, newChild, refChild);
+    if (!newChild.tagName) {
+      return super.insertBefore(parent, newChild, refChild);
+    }
+    const el = getPreservedElement(parent, newChild.tagName.toLowerCase());
     if (el) {
       this.setAttribute(el, PRESERVED_ATTRIBUTE, '');
       this.removeAttribute(el, PRESERVATION_ATTRIBUTE);
       newChild = el;
-      console.log(newChild);
       return;
     }
-    super.appendChild(parent, newChild);
+    super.insertBefore(parent, newChild, refChild);
   }
 
   setAttribute(el: any, name: string, value: string, namespace?: string): void {
@@ -88,6 +108,7 @@ export class EmulatedEncapsulationHydrationDomRendererV2 extends ɵEmulatedEncap
 
 
   appendChild(parent: any, newChild: any): void {
+    console.log('appendChild', parent, newChild);
     if (!newChild.tagName) {
       return super.appendChild(parent, newChild);
     }
@@ -95,11 +116,29 @@ export class EmulatedEncapsulationHydrationDomRendererV2 extends ɵEmulatedEncap
     if (el) {
       this.setAttribute(el, PRESERVED_ATTRIBUTE, '');
       this.removeAttribute(el, PRESERVATION_ATTRIBUTE);
+      Array.from(newChild.childNodes)
+        .forEach((node: Node) => {
+          this.appendChild(el, node);
+        });
       newChild = el;
-      console.log(newChild);
       return;
     }
     super.appendChild(parent, newChild);
+  }
+
+  insertBefore(parent: any, newChild: any, refChild: any): void {
+    console.log('insertBefore', parent, newChild, refChild);
+    if (!newChild.tagName) {
+      return super.insertBefore(parent, newChild, refChild);
+    }
+    const el = getPreservedElement(parent, newChild.tagName.toLowerCase());
+    if (el) {
+      this.setAttribute(el, PRESERVED_ATTRIBUTE, '');
+      this.removeAttribute(el, PRESERVATION_ATTRIBUTE);
+      newChild = el;
+      return;
+    }
+    super.insertBefore(parent, newChild, refChild);
   }
 
   setAttribute(el: any, name: string, value: string, namespace?: string): void {
@@ -114,6 +153,7 @@ export class ShadowHydrationDomRenderer extends ɵShadowDomRenderer {
 
 
   appendChild(parent: any, newChild: any): void {
+    console.log('appendChild', parent, newChild);
     if (!newChild.tagName) {
       return super.appendChild(parent, newChild);
     }
@@ -121,11 +161,35 @@ export class ShadowHydrationDomRenderer extends ɵShadowDomRenderer {
     if (el) {
       this.setAttribute(el, PRESERVED_ATTRIBUTE, '');
       this.removeAttribute(el, PRESERVATION_ATTRIBUTE);
+      Array.from(newChild.childNodes)
+        .forEach((node: Node) => {
+          this.appendChild(el, node);
+        });
       newChild = el;
       console.log(newChild);
       return;
     }
     super.appendChild(parent, newChild);
+  }
+
+  insertBefore(parent: any, newChild: any, refChild: any): void {
+    console.log('insertBefore', parent, newChild, refChild);
+    if (!newChild.tagName) {
+      return super.insertBefore(parent, newChild, refChild);
+    }
+    const el = getPreservedElement(parent, newChild.tagName.toLowerCase());
+    if (el) {
+      this.setAttribute(el, PRESERVED_ATTRIBUTE, '');
+      this.removeAttribute(el, PRESERVATION_ATTRIBUTE);
+      Array.from(newChild.childNodes)
+        .forEach((node: Node) => {
+          console.log(node);
+          this.appendChild(el, node);
+        });
+      newChild = el;
+      return;
+    }
+    super.insertBefore(parent, newChild, refChild);
   }
 
   setAttribute(el: any, name: string, value: string, namespace?: string): void {
@@ -189,7 +253,7 @@ function preserveElement(element: Element): void {
 /**
  * Cleans Unpreserved Children from node
  */
-function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
+function removeUnPreservedChildren(element: Node, isRoot?: boolean) {
 	// We don't want to destroy the root element, a node which is preserved or has a preserved node.
   if (isRoot || element.attributes.getNamedItem(PRESERVATION_ATTRIBUTE)) {
     if (element.childNodes) {
@@ -197,7 +261,7 @@ function removeUnPreservedChildren(element: Element, isRoot?: boolean) {
         .forEach((node) => {
           const preserved = node.attributes && node.attributes.getNamedItem(PRESERVATION_ATTRIBUTE);
           if (preserved) {
-						// removeUnPreservedChildren(node, false);
+						removeUnPreservedChildren(node, false);
 					} else {
 						element.removeChild(node);
 					}
