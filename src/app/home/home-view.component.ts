@@ -14,6 +14,6 @@ export class HomeView implements OnInit {
   ngOnInit() {
     this.subs = this.http.get('http://localhost:8000/data').map(data => {
       return `${data.greeting} ${data.name}`;
-    });
+    }).delay(200);
   }
 }

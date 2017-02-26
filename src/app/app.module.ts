@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { HomeView } from './home/home-view.component';
 import { CachedHttpModule } from '../modules/cached-http/cached-http.module';
 
-
 @NgModule({
 	imports: [
     CommonModule,

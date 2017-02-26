@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
 import { BrowserUniversalCacheModule } from '../modules/universal-cache/browser-universal-cache.module';
+import { HydrationRendererModule } from '../modules/hydration-renderer';
 
 @NgModule({
 	bootstrap: [ AppComponent ],
@@ -11,6 +12,7 @@ import { BrowserUniversalCacheModule } from '../modules/universal-cache/browser-
       appId: 'my-app-id'
     }),
     BrowserUniversalCacheModule,
+    HydrationRendererModule,
     AppModule
 	]
 })
